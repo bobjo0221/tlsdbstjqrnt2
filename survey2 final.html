@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>[설문 2] KAIST vs POSTECH 가위바위보체스</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family:'GmarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); font-weight:300; font-display:swap; }
+@font-face { font-family:'GmarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); font-weight:500; font-display:swap; }
+@font-face { font-family:'GmarketSans'; src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); font-weight:700; font-display:swap; }
+</style>
+<style>
+:root{
+  --ink:#f7f7f7;
+  --ink-2:#f7f7f7;
+  --panel:#ffffff;
+  --panel-2:#eeeeee;
+  --line:#dcdcdc;
+  --kaist:#3d5f92;
+  --kaist-dark:#233c5e;
+  --kaist-top:#8aa8d4;
+  --postech:#8a2a52;
+  --postech-dark:#521a34;
+  --postech-top:#c4779b;
+  --accent:#a97a2e;
+  --accent-dim:#7a5a22;
+  --text:#1c1c1c;
+  --text-dim:#6b6b6b;
+  --board-a:#eeeeee;
+  --board-b:#e2e2e2;
+  --ok:#3f9d5c;
+  --font-display:'GmarketSans','Noto Sans KR',sans-serif;
+  --font-poster:'GmarketSans','Noto Sans KR',sans-serif;
+  --font-body:'GmarketSans','Noto Sans KR',sans-serif;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background-color:#f7f7f7;
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  padding:24px 16px 60px;
+}
+.wrap{max-width:560px; margin:0 auto;}
+.lang-switch{ text-align:right; margin-bottom:10px; }
+.lang-switch a{
+  display:inline-block; font-family:var(--font-display); font-size:12px; font-weight:700;
+  color:var(--accent); text-decoration:none; border:1px solid var(--accent); border-radius:999px;
+  padding:6px 14px; transition:background .2s ease, color .2s ease;
+}
+.lang-switch a:hover{ background:var(--accent); color:#fff; }
+.event-banner{
+  text-align:center; font-family:'GmarketSans','Noto Sans KR',sans-serif; font-weight:700; font-size:clamp(15px,4vw,20px);
+  letter-spacing:.03em; color:var(--text); background:var(--ink);
+  padding:14px 22px; margin:0 auto 22px; display:block;
+  width:fit-content; max-width:100%; box-sizing:border-box; line-height:1.4;
+}
+.event-banner .banner-big{ font-size:150%; }
+.poster-bar{height:1px; margin-bottom:26px; background:var(--line);}
+.poster-title{display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; margin:0;}
+.poster-title .k, .poster-title .p{font-family:var(--font-poster); font-weight:700; font-size:clamp(24px,6.5vw,32px); letter-spacing:.03em; line-height:1;}
+.poster-title .k{color:var(--kaist);}
+.poster-title .p{color:var(--postech);}
+.poster-title .vs{font-family:var(--font-display); font-size:11px; font-weight:600; letter-spacing:.3em; color:var(--text-dim);}
+.poster-sub{text-align:center; font-family:var(--font-display); font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent-dim); margin:8px 0 2px;}
+.subtitle{color:var(--text-dim); font-size:13px; text-align:center; margin:10px 0 30px; line-height:1.7;}
+.steps{display:flex; justify-content:center; gap:10px; margin-bottom:28px;}
+.step-dot{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim); font-family:var(--font-display);}
+.step-dot .n{width:20px; height:20px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-weight:700;}
+.step-dot.active .n{background:var(--accent); color:#241a00; border-color:var(--accent);}
+.step-dot.done .n{background:var(--ok); color:#052711; border-color:var(--ok);}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:6px 26px 6px 26px; padding:32px; position:relative; overflow:hidden;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.6);}
+
+.field{margin-bottom:22px;}
+label{display:block; font-size:12px; color:var(--text-dim); margin-bottom:7px; font-family:var(--font-display); letter-spacing:.05em;}
+input[type=text]{
+  width:100%; background:var(--panel-2); border:1px solid var(--line); border-radius:8px;
+  color:var(--text); font-size:16px; padding:13px 14px; font-family:var(--font-body);
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+input[type=text]:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(169,122,46,.15);}
+.error{font-size:12px; color:var(--postech); margin-top:6px; display:none;}
+.error.show{display:block;}
+button.primary{
+  width:100%; margin-top:10px; background:transparent;
+  color:var(--accent); border:1.5px solid var(--accent); border-radius:4px 14px 4px 14px; padding:14px; font-size:14px; font-weight:600;
+  cursor:pointer; font-family:var(--font-display); letter-spacing:.04em;
+  transition:background .2s ease, color .2s ease, transform .15s ease;
+}
+button.primary:hover{background:var(--accent); color:#241a00;}
+button.primary:active{background:var(--accent); color:#241a00; transform:scale(.98);}
+.legend{display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-bottom:10px; padding:0 2px; font-family:var(--font-display);}
+.legend .b{color:var(--kaist);} .legend .r{color:var(--postech);}
+.board{display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); gap:2px; aspect-ratio:1/1; width:100%;
+  border-radius:6px; overflow:hidden; border:2px solid var(--line); touch-action:manipulation;}
+.cell{position:relative; display:flex; align-items:center; justify-content:center; background:var(--board-a); user-select:none;}
+.cell.alt{background:var(--board-b);}
+.cell.selectable{cursor:pointer;}
+.preview-die{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:clamp(14px,3.6vw,22px); color:var(--postech); pointer-events:none;
+  animation:previewPulse 1.5s ease-in-out infinite;
+}
+@keyframes previewPulse{
+  0%,100%{ filter:blur(0px); opacity:.9; transform:scale(1); }
+  50%{ filter:blur(3px); opacity:.28; transform:scale(.92); }
+}
+.piece{width:76%; height:76%; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:clamp(15px,4vw,24px); position:relative; color:#fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.18),
+    inset 0 5px 8px rgba(255,255,255,.18),
+    inset 0 -6px 10px rgba(0,0,0,.35),
+    0 3px 6px rgba(0,0,0,.4);
+  transition:transform .15s ease;}
+.piece.blue{background:radial-gradient(120% 130% at 28% 20%, rgba(255,255,255,.4), rgba(255,255,255,0) 48%), linear-gradient(155deg, var(--kaist), var(--kaist-dark));}
+.piece.red{background:radial-gradient(120% 130% at 28% 20%, rgba(255,255,255,.4), rgba(255,255,255,0) 48%), linear-gradient(155deg, var(--postech), var(--postech-dark));}
+.piece .ico{filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));}
+.piece.pop{transform:scale(1.15);}
+.piece.shatter{animation:shatter .5s ease forwards;}
+@keyframes shatter{0%{transform:scale(1); opacity:1;}100%{transform:scale(1.6) rotate(20deg); opacity:0;}}
+.ico{width:1em; height:1em; display:inline-block; vertical-align:-0.15em;}
+.ico.line{fill:none; stroke:currentColor; stroke-width:3; stroke-linecap:round;}
+.ico.fill{fill:currentColor; stroke:none;}
+.status-row{display:flex; justify-content:space-between; align-items:center; margin:14px 0 8px; font-size:12px; color:var(--text-dim); font-family:var(--font-display);}
+.status-row b{color:var(--text);}
+.undo-btn{
+  width:100%; margin:4px 0 8px; background:var(--panel-2); color:var(--text); border:1px solid var(--line);
+  border-radius:8px; padding:11px; font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font-display);
+  transition:border-color .2s ease, background .2s ease;
+}
+.undo-btn:hover:not(:disabled){border-color:var(--accent); background:var(--panel);}
+.undo-btn:active:not(:disabled){border-color:var(--accent); background:var(--panel); transform:scale(.98);}
+.undo-btn:disabled{opacity:.4; cursor:default;}
+.hint{font-size:12px; color:var(--text-dim); line-height:1.7; margin-top:10px;}
+.hint b{color:var(--text);}
+.rule-legend{display:flex; gap:14px; justify-content:center; margin-top:10px; font-size:11px; color:var(--text-dim); flex-wrap:wrap; font-family:var(--font-display);}
+.rule-legend span{white-space:nowrap;}
+.result-badge{text-align:center; padding:24px 10px 4px;}
+.stamp{display:inline-block; border:1.5px solid var(--accent); border-radius:10px; padding:14px 30px; transform:rotate(-3deg); color:var(--accent);}
+.stamp-label{font-family:var(--font-display); font-size:11px; letter-spacing:.28em; text-transform:uppercase; margin-bottom:4px;}
+.stamp-score{font-family:var(--font-poster); font-weight:700; font-size:32px; letter-spacing:.02em; line-height:1;}
+.result-badge .msg{font-size:13px; color:var(--text-dim); margin-top:18px; line-height:1.7;}
+.summary{background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-top:20px; font-size:13px;}
+.summary div{display:flex; justify-content:space-between; padding:4px 0;}
+.summary div span:first-child{color:var(--text-dim);}
+.save-note{font-size:11px; color:var(--text-dim); text-align:center; margin-top:14px; line-height:1.6;}
+.hidden{display:none;}
+@media (max-width:420px){
+  body{ padding:18px 10px 40px; }
+  .card{ padding:20px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-switch"><a href="survey_en.html">🇬🇧 English version →</a></div>
+  <div id="pageHeader">
+  <div class="event-banner">과학퀴즈 경기중 이벤트:<br><span class="banner-big">가위바위보 체스 튜토리얼</span></div>
+  <div class="poster-bar"></div>
+  <div class="poster-title"><span class="k">KAIST</span><span class="vs">VS</span><span class="p">POSTECH</span></div>
+  <div class="poster-sub">설문 2 · Science Quiz · 가위바위보체스</div>
+  <div class="subtitle">단 한 번의 이동으로 카이스트 주사위를 격파하면 100점을 드립니다. 참가만 해도 점수가 있으니 바로 참여해보세요!</div>
+  </div>
+
+  <div class="card">
+    <div id="page1">
+      <div class="field">
+        <label for="nameInput">이름</label>
+        <input type="text" id="nameInput" placeholder="홍길동" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="studentIdInput">학번</label>
+        <input type="text" id="studentIdInput" placeholder="202xxxxx" inputmode="numeric" maxlength="8" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="idInput">POVIS ID</label>
+        <input type="text" id="idInput" placeholder="honggildong" autocomplete="off">
+        <div class="error" id="page1Error">이름, POVIS ID를 모두 입력하고 학번은 숫자 8자리로 적어 주세요.</div>
+      </div>
+      <button class="primary" id="toStep2">국지전으로 이동</button>
+    </div>
+
+    <div id="page2" class="hidden">
+      <div class="board" id="board"></div>
+      <div class="status-row">
+        <span>남은 이동 칸수: <b id="stepsLeft">-</b></span>
+        <span>현재 윗면: <b id="topFace">-</b></span>
+      </div>
+      <button class="undo-btn" id="undoBtn" disabled>↩ 한 칸 되돌리기</button>
+      <div class="rule-legend">
+        <span>✂️ 가위 &gt; 🖐️ 보</span>
+        <span>✊ 바위 &gt; ✂️ 가위</span>
+        <span>🖐️ 보 &gt; ✊ 바위</span>
+      </div>
+      <div class="hint" id="ruleHint">
+        포스텍 주사위를 이동시켜 카이스트측 주사위를 잡아보세요. 상하좌우 움직일 수 있으나 직전칸으로 돌아가지는 못합니다. 되돌리기 버튼으로 실수를 만회해보세요!
+      </div>
+    </div>
+
+    <div id="page3" class="hidden">
+      <div class="result-badge">
+        <div class="stamp" id="resultStamp">
+          <div class="stamp-label" id="resultLabel">참가 완료</div>
+          <div class="stamp-score" id="resultScore">0점</div>
+        </div>
+        <div class="msg" id="resultMsg"></div>
+        <div class="msg" style="font-weight:700; color:var(--accent); margin-top:10px;">다음퀴즈도 참여해주세요!!</div>
+      </div>
+      <div class="summary">
+        <div><span>이름</span><span id="sumName">-</span></div>
+        <div><span>학번</span><span id="sumStudentId">-</span></div>
+        <div><span>POVIS ID</span><span id="sumId">-</span></div>
+        <div><span>대결 결과</span><span id="sumOutcome">-</span></div>
+      </div>
+      <div class="save-note" id="saveNote">기록을 저장하는 중입니다…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const SIZE = 8;
+const STEPS = { '가위':3, '바위':4, '보':5 };
+const BEATS = { '가위':'보', '바위':'가위', '보':'바위' };
+const FACE_ICON = {
+  '가위': '✂️',
+  '바위': '✊',
+  '보':   '🖐️'
+};
+const DIRS = [
+  {k:'N', dr:-1, dc:0},
+  {k:'S', dr: 1, dc:0},
+  {k:'E', dr:0, dc: 1},
+  {k:'W', dr:0, dc:-1},
+];
+
+let name = '', povisId = '', studentId = '';
+let kaist = { row:4, col:5, top:'가위', vert:'보', horiz:'바위' };
+let postech = { row:2, col:2, top:'바위', horiz:'가위', vert:'보' };
+let totalSteps = STEPS[postech.top];
+let remaining = totalSteps;
+let prevPos = null;
+let moveHistory = [];
+let locked = false;
+let finalScore = 0;
+let outcomeText = '';
+
+let boardBuilt = false;
+let cellEls = [];
+let postechEl = null, kaistEl = null;
+
+function createDiePiece(color){
+  const wrap = document.createElement('div');
+  wrap.className = 'piece ' + color;
+  return wrap;
+}
+
+function buildPieces(){
+  postechEl = createDiePiece('red');
+  postechEl.innerHTML = FACE_ICON[postech.top];
+  kaistEl = createDiePiece('blue');
+  kaistEl.innerHTML = FACE_ICON[kaist.top];
+}
+
+function inBounds(r,c){ return r>=0 && r<SIZE && c>=0 && c<SIZE; }
+function isKaistCell(r,c){ return kaist.row===r && kaist.col===c; }
+function isAdjacentToKaist(r,c){
+  return (Math.abs(r-kaist.row)===1 && c===kaist.col) || (Math.abs(c-kaist.col)===1 && r===kaist.row);
+}
+
+function validNextSteps(){
+  const out = [];
+  for(const d of DIRS){
+    const nr = postech.row+d.dr, nc = postech.col+d.dc;
+    if(!inBounds(nr,nc)) continue;
+    if(prevPos && prevPos.row===nr && prevPos.col===nc) continue;
+    if(isKaistCell(nr,nc)) continue;
+    out.push({dir:d.k, row:nr, col:nc});
+  }
+  return out;
+}
+
+function applyRoll(dir){
+  if(dir==='N' || dir==='S'){
+    const t = postech.top; postech.top = postech.vert; postech.vert = t;
+  } else {
+    const t = postech.top; postech.top = postech.horiz; postech.horiz = t;
+  }
+}
+
+function doStep(dir, nr, nc){
+  if(locked) return;
+  moveHistory.push({
+    row: postech.row, col: postech.col,
+    top: postech.top, horiz: postech.horiz, vert: postech.vert,
+    remaining: remaining,
+    prevPos: prevPos ? { row:prevPos.row, col:prevPos.col } : null,
+    dir: dir
+  });
+  prevPos = { row:postech.row, col:postech.col };
+  postech.row = nr; postech.col = nc;
+  applyRoll(dir);
+  remaining -= 1;
+  if(remaining > 0){
+    const next = validNextSteps();
+    if(next.length === 0){
+      locked = true;
+      renderBoard();
+      finishMove();
+      return;
+    }
+    renderBoard();
+    return;
+  }
+  locked = true;
+  renderBoard();
+  finishMove();
+}
+
+function undoLastStep(){
+  if(locked || moveHistory.length === 0) return;
+  const snap = moveHistory.pop();
+  postech.row = snap.row; postech.col = snap.col;
+  postech.top = snap.top; postech.horiz = snap.horiz; postech.vert = snap.vert;
+  remaining = snap.remaining;
+  prevPos = snap.prevPos;
+  renderBoard();
+}
+
+function finishMove(){
+  locked = true;
+  document.getElementById('undoBtn').disabled = true;
+  const el = document.getElementById('board');
+  el.querySelectorAll('.cell').forEach(c=> c.classList.remove('selectable'));
+  const adjacent = isAdjacentToKaist(postech.row, postech.col);
+  if(!adjacent){
+    finalScore = 10;
+    outcomeText = '카이스트 주사위에 닿지 못했습니다';
+    document.getElementById('ruleHint').innerHTML = '포스텍 주사위가 이동을 마쳤지만 카이스트 주사위와 맞닿지 못해 대결이 열리지 않았습니다. 참가 점수 <b>10점</b>으로 기록됩니다.';
+    setTimeout(goToResult, 900);
+    return;
+  }
+  const a = postech.top, d = kaist.top;
+  let win = false, tie = false;
+  if(a === d) tie = true;
+  else if(BEATS[a] === d) win = true;
+  if(win){
+    finalScore = 100;
+    outcomeText = a + ' 승리 (vs ' + d + ')';
+    document.getElementById('ruleHint').innerHTML = '가위바위보 대결! ' + FACE_ICON[a] + a + ' vs ' + FACE_ICON[d] + d + ' — <b>포스텍 승리! 카이스트 격파!</b> 100점을 획득했습니다.';
+    if(kaistEl) kaistEl.classList.add('shatter');
+    if(postechEl) postechEl.classList.add('pop');
+  } else if(tie){
+    finalScore = 10;
+    outcomeText = a + ' 무승부 (vs ' + d + ')';
+    document.getElementById('ruleHint').innerHTML = '가위바위보 대결! ' + FACE_ICON[a] + a + ' vs ' + FACE_ICON[d] + d + ' — <b>무승부</b>. 두 말 모두 자리를 지켰습니다. 참가 점수 10점으로 기록됩니다.';
+  } else {
+    finalScore = 10;
+    outcomeText = a + ' 패배 (vs ' + d + ')';
+    document.getElementById('ruleHint').innerHTML = '가위바위보 대결! ' + FACE_ICON[a] + a + ' vs ' + FACE_ICON[d] + d + ' — <b>카이스트 승리</b>. 포스텍 말이 제거됩니다. 참가 점수 10점으로 기록됩니다.';
+  }
+  setTimeout(goToResult, win ? 1300 : 1100);
+}
+
+function buildBoardGrid(){
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  cellEls = [];
+  for(let r=0;r<SIZE;r++){
+    const rowArr = [];
+    for(let c=0;c<SIZE;c++){
+      const cell = document.createElement('div');
+      cell.className = 'cell' + ((r+c)%2===1 ? ' alt' : '');
+      board.appendChild(cell);
+      rowArr.push(cell);
+    }
+    cellEls.push(rowArr);
+  }
+  boardBuilt = true;
+  buildPieces();
+  cellEls[kaist.row][kaist.col].appendChild(kaistEl);
+  cellEls[postech.row][postech.col].appendChild(postechEl);
+}
+
+function renderBoard(){
+  if(!boardBuilt) buildBoardGrid();
+
+  let targets = [];
+  if(!locked) targets = validNextSteps();
+
+  for(let r=0;r<SIZE;r++){
+    for(let c=0;c<SIZE;c++){
+      const cell = cellEls[r][c];
+      cell.querySelectorAll('.preview-die').forEach(function(n){ n.remove(); });
+      const match = targets.find(function(t){ return t.row===r && t.col===c; });
+      if(match){
+        cell.classList.add('selectable');
+        cell.onclick = function(){ doStep(match.dir, match.row, match.col); };
+        const previewFace = (match.dir==='N' || match.dir==='S') ? postech.vert : postech.horiz;
+        const pv = document.createElement('div');
+        pv.className = 'preview-die';
+        pv.innerHTML = FACE_ICON[previewFace];
+        cell.appendChild(pv);
+      } else {
+        cell.classList.remove('selectable');
+        cell.onclick = null;
+      }
+    }
+  }
+
+  postechEl.innerHTML = FACE_ICON[postech.top];
+  cellEls[postech.row][postech.col].appendChild(postechEl);
+
+  document.getElementById('stepsLeft').textContent = remaining;
+  document.getElementById('topFace').innerHTML = FACE_ICON[postech.top] + ' ' + postech.top;
+  document.getElementById('undoBtn').disabled = locked || moveHistory.length === 0;
+}
+document.getElementById('undoBtn').addEventListener('click', undoLastStep);
+
+function setDot(n, cls){
+  const el = document.getElementById('dot'+n);
+  if(el) el.className = 'step-dot' + (cls ? ' '+cls : '');
+}
+
+document.getElementById('studentIdInput').addEventListener('input', function(e){
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0,8);
+});
+
+document.getElementById('toStep2').addEventListener('click', function(){
+  const nameEl = document.getElementById('nameInput');
+  const idEl = document.getElementById('idInput');
+  const studentIdEl = document.getElementById('studentIdInput');
+  const err = document.getElementById('page1Error');
+  name = nameEl.value.trim();
+  povisId = idEl.value.trim();
+  studentId = studentIdEl.value.trim();
+  const studentIdValid = /^\d{8}$/.test(studentId);
+  if(!name || !povisId || !studentIdValid){
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  document.getElementById('page1').classList.add('hidden');
+  document.getElementById('page2').classList.remove('hidden');
+  document.getElementById('pageHeader').classList.add('hidden');
+  setDot(1,'done'); setDot(2,'active');
+  renderBoard();
+});
+
+const GOOGLE_FORM_ID = '1FAIpQLScXQPZjJbcZ2cx_IAqWZJiu-LEo5vcNgdr2w_T_lHXvrwCfCA';
+const GOOGLE_FORM_ENTRY = {
+  name: 'entry.866975153',
+  povisId: 'entry.1745020199',
+  studentId: 'entry.69369127',
+  score: 'entry.1381748492'
+};
+
+function downloadRecordFile(record){
+  try{
+    const blob = new Blob([JSON.stringify(record, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rpschess_record_' + (record.povisId || 'unknown') + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return true;
+  } catch(e){
+    return false;
+  }
+}
+
+function submitToGoogleForm(record){
+  return new Promise(function(resolve){
+    try{
+      const url = 'https://docs.google.com/forms/d/e/' + GOOGLE_FORM_ID + '/formResponse';
+      const params = new URLSearchParams();
+      params.append(GOOGLE_FORM_ENTRY.name, record.name);
+      params.append(GOOGLE_FORM_ENTRY.povisId, record.povisId);
+      params.append(GOOGLE_FORM_ENTRY.studentId, record.studentId);
+      params.append(GOOGLE_FORM_ENTRY.score, String(record.score));
+      fetch(url, { method:'POST', mode:'no-cors', body: params })
+        .then(function(){ resolve(true); })
+        .catch(function(){ resolve(false); });
+    } catch(e){
+      resolve(false);
+    }
+  });
+}
+
+async function saveRecord(){
+  const noteEl = document.getElementById('saveNote');
+  const safeId = povisId.replace(/[\s\/\\'"]/g, '_').slice(0,120);
+  const record = {
+    name: name,
+    povisId: povisId,
+    studentId: studentId,
+    score: finalScore,
+    outcome: outcomeText,
+    timestamp: new Date().toISOString()
+  };
+
+  const sentToForm = await submitToGoogleForm(record);
+
+  let sharedStorageOk = false;
+  if(window.storage && typeof window.storage.set === 'function'){
+    try{
+      const result = await window.storage.set('rpschess:' + safeId, JSON.stringify(record), true);
+      sharedStorageOk = !!result;
+    } catch(e){ /* ignore, form submission is primary */ }
+  }
+
+  if(sentToForm){
+    noteEl.textContent = '기록이 제출되었습니다. 참가해 주셔서 감사합니다.';
+  } else {
+    const downloaded = downloadRecordFile(record);
+    noteEl.innerHTML = sharedStorageOk
+      ? '기록이 저장되었습니다.'
+      : (downloaded
+        ? '구글폼 제출에 실패했습니다. 대신 결과 파일이 다운로드되었으니 담당자에게 전달해 주세요.'
+        : '기록 제출에 실패했습니다. 화면을 캡처해 담당자에게 전달해 주세요.');
+  }
+}
+
+function goToResult(){
+  document.getElementById('page2').classList.add('hidden');
+  document.getElementById('page3').classList.remove('hidden');
+  setDot(2,'done'); setDot(3,'active');
+  document.getElementById('resultLabel').textContent = finalScore === 100 ? '격파 성공' : '참가 완료';
+  document.getElementById('resultScore').textContent = finalScore + '점';
+  document.getElementById('resultMsg').textContent = finalScore === 100
+    ? '단 한 번의 이동으로 카이스트 주사위를 격파했습니다!'
+    : '이번 판에서는 격파에 실패했지만, 참가해 주셔서 10점을 드립니다.';
+  document.getElementById('sumName').textContent = name;
+  document.getElementById('sumId').textContent = povisId;
+  document.getElementById('sumStudentId').textContent = studentId;
+  document.getElementById('sumOutcome').textContent = outcomeText;
+  saveRecord();
+}
+
+setDot(1,'active');
+})();
+</script>
+</body>
+</html>
